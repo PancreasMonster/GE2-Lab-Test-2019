@@ -43,7 +43,6 @@ public class FighterTiberium : MonoBehaviour {
 
     void OnTriggerStay (Collider col)
     {
-        Debug.Log("Arrived");
         if (col.transform.tag == "Base" && refueling == true && col.GetComponent<BaseScript>().tiberium >= 7)
         {
             col.GetComponent<BaseScript>().tiberium -= 7;
