@@ -7,7 +7,7 @@ public class FighterTiberium : MonoBehaviour {
 
     TextMesh text;
     public float fireRate = .4f, force = 500;
-    bool bulletCooldown, refueling, attacking;
+    bool bulletCooldown, refueling;
     public float tiberium = 7;
     GameObject targetBase, homeBase;
     public GameObject bullet;
@@ -37,11 +37,21 @@ public class FighterTiberium : MonoBehaviour {
         {
             arrive.weight = 1;
             arrive.targetGameObject = homeBase;
-            attacking = false;
             refueling = true;
         }
 	}
 
+    void OnTriggerStay (Collider col)
+    {
+        Debug.Log("Arrived");
+        if (col.transform.tag == "Base" && refueling == true && col.GetComponent<BaseScript>().tiberium >= 7)
+        {
+            col.GetComponent<BaseScript>().tiberium -= 7;
+            tiberium = 7;
+            refueling = false;
+            arrive.targetGameObject = targetBase;
+        }
+    }
     public void AssignTarget (GameObject target, GameObject home)
     {
         targetBase = target;
@@ -53,7 +63,7 @@ public class FighterTiberium : MonoBehaviour {
         tiberium -= 1;
         Vector3 dir = targetBase.transform.position - transform.position;
         dir.Normalize();
-        GameObject clone = Instantiate(bullet, transform.position, Quaternion.identity);
+        GameObject clone = Instantiate(bullet, transform.position, transform.rotation);
         clone.GetComponent<Renderer>().material.color = GetComponent<Renderer>().material.color;
         Rigidbody rb = clone.GetComponent<Rigidbody>();
         rb.AddForce(dir * force);
