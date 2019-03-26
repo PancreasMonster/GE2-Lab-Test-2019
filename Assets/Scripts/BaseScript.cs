@@ -1,13 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class Base : MonoBehaviour
-{
+public class BaseScript : MonoBehaviour {
+
     public float tiberium = 5;
-    bool refresh;
-    public TextMeshPro text;
+    bool refresh = false;
+    TextMesh text;
 
     public GameObject fighterPrefab;
 
@@ -15,7 +15,7 @@ public class Base : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        text = GetComponentInChildren<TextMesh>();
     }
 
     // Update is called once per frame
@@ -28,9 +28,16 @@ public class Base : MonoBehaviour
             refresh = true;
             StartCoroutine(tiberiumAdd());
         }
+
+        if (tiberium >= 10)
+        {
+            tiberium -= 10;
+            GameObject clone = Instantiate(fighterPrefab, transform.position, Quaternion.identity);
+            clone.GetComponent<Renderer>().material.color = GetComponent<Renderer>().material.color;
+        }
     }
 
-    IEnumerator tiberiumAdd ()
+    IEnumerator tiberiumAdd()
     {
         yield return new WaitForSeconds(1);
         refresh = false;
